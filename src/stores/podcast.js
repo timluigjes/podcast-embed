@@ -1,14 +1,16 @@
-import { ref, reactive } from 'vue'
+import { ref, reactive, getCurrentInstance } from 'vue'
 import { defineStore } from 'pinia'
 import { Howl } from 'howler'
 
 export const usePodcastStore = defineStore('podcast', () => {
-  const url = 'https://rss.art19.com/wilde-eeuwen'
+  const url = document.querySelector('#app').dataset.url;
   const list = ref([])
   const episode = reactive({
     sound: null,
     title: '',
-    isPlaying: false
+    isPlaying: false,
+    image: null,
+    url: ''
   })
 
   async function prepareList() {
@@ -69,8 +71,24 @@ export const usePodcastStore = defineStore('podcast', () => {
     })
 
     episode.title = objEpisode.title
-    episode.sound = sound
+    episode.image = objEpisode.image
+    episode.sound = sound;
+    episode.url = objEpisode.url;
   }
 
-  return { getList, list, playEpisode, episode }
+  function getActiveEpisode() {
+    return episode;
+  }
+
+  function pause() {
+    episode.sound.pause()
+    episode.isPlaying = false
+  }
+
+  function play() {
+    episode.sound.play()
+    episode.isPlaying = true
+  }
+
+  return { getList, list, playEpisode, episode, pause, play, getActiveEpisode }
 })

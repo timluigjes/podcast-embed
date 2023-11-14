@@ -1,31 +1,68 @@
 <script setup>
-import { usePodcastStore } from '../stores/podcast';
-const podcastStore = usePodcastStore();
-const episode = podcastStore.episode;
+import { usePodcastStore } from '../stores/podcast'
+const podcastStore = usePodcastStore()
+const episode = podcastStore.episode
 
+function play() {
+    if (episode.isPlaying) {
+        podcastStore.pause();
+    } else {
+        podcastStore.play();
+    }
+}
 </script>
 <template>
-    <div class="uk-navbar-container" uk-navbar v-if="episode.isPlaying">
-        <div class="uk-navbar-center">
-            <div class="info">
-                <img :src="episode.image" width="10" height="20" alt="">
-                <span class="title uk-text-lead">{{ episode.title }}</span>
-            </div>
-            <ul class="uk-navbar-nav">
-                <!-- <li><button aria-label="Previous song" class="uk-button uk-button-default"><span aria-hidden="true" uk-icon="icon: triangle-left"></span></button></li> -->
-                <li><button @click="play" aria-label="Play song" class="uk-button uk-button-default">
-                        <span v-show="!episode.isPlaying" aria-hidden="true" uk-icon="icon: play"></span>
-                        <span v-show="episode.isPlaying" aria-hidden="true" uk-icon="icon: pause"></span>
-                    </button></li>
-                <!-- <li><button aria-label="Next song" class="uk-button uk-button-default"><span aria-hidden="true" uk-icon="icon: triangle-right"></span></button></li> -->
-            </ul>
+    <div class="navbar" v-if="episode.title.length > 0">
+        <div class="info">
+            <img :src="episode.image" width="75" alt="" />
+            <span class="title">{{ episode.title }}</span>
+        </div>
+        <div class="controls">
+            <button @click="play">
+                <font-awesome-icon icon="fa-solid fa-pause" v-show="episode.isPlaying" />
+                <font-awesome-icon icon="fa-solid fa-play" v-show="!episode.isPlaying" />
+            </button>
         </div>
     </div>
 </template>
 
-<style>
+<style scoped>
+.navbar {
+    display: flex;
+    padding: 10px;
+    background-color: #f8f8f8;
+    border-block: 1px solid #e5e5e5;
+    gap: 20px;
+    justify-content: space-between;
+    box-shadow: 0px 0px 7px 1px rgba(0,0,0,0.1);
+    position: sticky;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.controls {
+    display: flex;
+    align-items: center;
+    & button {
+        border: 1px solid #e5e5e5;
+        border-radius: 50%;
+        padding: 0.5rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 60px;
+        height: 60px;
+    }
+}
+
 .info {
     display: flex;
-    flex: 1 1 100%;
+    gap: 20px;
+    align-items: center;
+
+    & .title {
+        font-size: 1.2rem;
+    }
 }
 </style>
