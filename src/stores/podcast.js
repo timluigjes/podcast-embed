@@ -51,7 +51,6 @@ export const usePodcastStore = defineStore('podcast', () => {
   function step() {
     let seek = episode.sound.seek() || 0
     progress.value = (seek / episode.sound.duration()) * 100 || 0
-    // console.log(progress.value)
     if (episode.isPlaying) {
       requestAnimationFrame(step)
     }
