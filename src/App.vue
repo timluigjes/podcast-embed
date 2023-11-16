@@ -19,5 +19,6 @@ main {
   flex-direction: column;
   justify-content: space-between;
   height: 100dvh;
+  overflow-x: hidden;
 }
 </style>

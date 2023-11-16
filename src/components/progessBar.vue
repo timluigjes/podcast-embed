@@ -1,15 +1,40 @@
 <script setup>
+import { ref } from 'vue'
 import { usePodcastStore } from '../stores/podcast'
 import { storeToRefs } from 'pinia'
 const store = usePodcastStore()
 const { progress } = storeToRefs(store)
-console.log(progress)
+const time = ref('')
+
+setInterval(function () {
+  if (store.episode.sound === null) {
+    time.value = '0:00'
+  }
+  time.value = formatTime(store.episode.sound.seek())
+}, 1000)
+
+function formatTime(seek) {
+  const minutes = Math.floor(seek / 60)
+  const seconds = Math.floor(seek % 60)
+
+  let digitMinutes = 1
+  if (seek > 600) {
+    digitMinutes = 2
+  }
+
+  const formattedMinutes = String(minutes).padStart(digitMinutes, '0')
+  const formattedSeconds = String(seconds).padStart(2, '0')
+
+  return formattedMinutes + ':' + formattedSeconds
+}
 </script>
 
 <template>
   <div class="progress-bar">
     <progress class="uk-progress" max="100" :value="progress"></progress>
-    <div class="uk-badge" :style="'left: ' + progress + '%'"></div>
+    <div class="uk-badge" :style="'left: ' + progress + '%'">
+      <span class="uk-tooltip uk-active uk-transform-origin-bottom-center">{{ time }}</span>
+    </div>
   </div>
 </template>
 
@@ -22,6 +47,18 @@ console.log(progress)
     margin-bottom: 0;
     border-radius: unset;
     height: 10px;
+  }
+
+  & span {
+    display: block;
+    padding: 10px 10px;
+    width: auto;
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: fit-content;
+    max-width: unset;
   }
 
   & div {
