@@ -1,10 +1,11 @@
-import { ref, reactive, getCurrentInstance } from 'vue'
+import { ref, reactive } from 'vue'
 import { defineStore } from 'pinia'
 import { Howl } from 'howler'
 
 export const usePodcastStore = defineStore('podcast', () => {
-  const url = document.querySelector('#app').dataset.url;
+  const url = document.querySelector('#app').dataset.url
   const list = ref([])
+  const progress = ref(0)
   const episode = reactive({
     sound: null,
     title: '',
@@ -47,6 +48,15 @@ export const usePodcastStore = defineStore('podcast', () => {
     }
   }
 
+  function step() {
+    let seek = episode.sound.seek() || 0
+    progress.value = (seek / episode.sound.duration()) * 100 || 0
+    // console.log(progress.value)
+    if (episode.isPlaying) {
+      requestAnimationFrame(step)
+    }
+  }
+
   function playEpisode(objEpisode) {
     if (episode.sound !== null) {
       episode.sound.unload()
@@ -58,6 +68,7 @@ export const usePodcastStore = defineStore('podcast', () => {
       html5: true,
       onplay: function () {
         episode.isPlaying = true
+        requestAnimationFrame(step)
       },
       onpause: function () {
         episode.isPlaying = false
@@ -72,12 +83,12 @@ export const usePodcastStore = defineStore('podcast', () => {
 
     episode.title = objEpisode.title
     episode.image = objEpisode.image
-    episode.sound = sound;
-    episode.url = objEpisode.url;
+    episode.sound = sound
+    episode.url = objEpisode.url
   }
 
   function getActiveEpisode() {
-    return episode;
+    return episode
   }
 
   function pause() {
@@ -90,5 +101,5 @@ export const usePodcastStore = defineStore('podcast', () => {
     episode.isPlaying = true
   }
 
-  return { getList, list, playEpisode, episode, pause, play, getActiveEpisode }
+  return { getList, list, playEpisode, episode, pause, play, getActiveEpisode, progress }
 })
