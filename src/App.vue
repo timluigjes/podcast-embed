@@ -5,12 +5,8 @@ import ListView from './components/ListView.vue'
 </script>
 
 <template>
-  <header></header>
-
-  <main>
-    <ListView></ListView>
-    <NavBar></NavBar>
-  </main>
+  <ListView></ListView>
+  <NavBar></NavBar>
 </template>
 
 <style scoped>

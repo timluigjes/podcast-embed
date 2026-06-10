@@ -25,14 +25,10 @@ function playEpisode(episode) {
         <img :src="episode.image" width="50" alt="" /><span>{{ episode.title }}</span>
       </div>
       <button class="uk-margin-left" @click="playEpisode(episode)" aria-label="Play episode">
-        <font-awesome-icon
-          icon="fa-solid fa-pause"
-          v-show="activeEpisode.title === episode.title && activeEpisode.isPlaying"
-        />
-        <font-awesome-icon
-          icon="fa-solid fa-play"
-          v-show="!activeEpisode.isPlaying || episode.title !== activeEpisode.title"
-        />
+        <font-awesome-icon icon="fa-solid fa-pause"
+          v-show="activeEpisode.title === episode.title && activeEpisode.isPlaying" />
+        <font-awesome-icon icon="fa-solid fa-play"
+          v-show="!activeEpisode.isPlaying || episode.title !== activeEpisode.title" />
       </button>
     </li>
   </ul>
